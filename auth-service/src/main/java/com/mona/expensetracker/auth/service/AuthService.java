@@ -1,14 +1,15 @@
 package com.mona.expensetracker.auth.service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.mona.expensetracker.auth.dto.LoginRequest;
 import com.mona.expensetracker.auth.dto.RegisterRequest;
 import com.mona.expensetracker.auth.entity.User;
 import com.mona.expensetracker.auth.repository.UserRepository;
-
 @Service
 public class AuthService {
 
@@ -37,4 +38,24 @@ private final PasswordEncoder passwordEncoder;
 
         return "User registered successfully";
     }
+    public String login(LoginRequest request) {
+
+    Optional<User> optionalUser =
+            userRepository.findByEmail(request.getEmail());
+
+    if (optionalUser.isEmpty()) {
+        return "User not found";
+    }
+
+    User user = optionalUser.get();
+
+    if (!passwordEncoder.matches(
+            request.getPassword(),
+            user.getPassword())) {
+
+        return "Invalid password";
+    }
+
+    return "Login successful";
+}
 }
