@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.mona.expensetracker.auth.config.JwtService;
 import com.mona.expensetracker.auth.dto.LoginRequest;
 import com.mona.expensetracker.auth.dto.RegisterRequest;
 import com.mona.expensetracker.auth.entity.User;
@@ -15,10 +16,12 @@ public class AuthService {
 
 private final UserRepository userRepository;
 private final PasswordEncoder passwordEncoder;
+private final JwtService jwtService;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     public String register(RegisterRequest request) {
@@ -56,6 +59,6 @@ private final PasswordEncoder passwordEncoder;
         return "Invalid password";
     }
 
-    return "Login successful";
+    return jwtService.generateToken(user.getEmail());
 }
 }
