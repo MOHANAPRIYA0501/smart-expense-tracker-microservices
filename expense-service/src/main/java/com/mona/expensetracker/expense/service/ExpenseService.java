@@ -61,4 +61,16 @@ public String updateExpense(Long id, ExpenseRequest request) {
 
     return "Expense updated successfully";
 }
+
+public String deleteExpense(Long id) {
+
+    if (!expenseRepository.existsById(id)) {
+        throw new RuntimeException(
+                "Expense not found with id: " + id);
+    }
+
+    expenseRepository.deleteById(id);
+
+    return "Expense deleted successfully";
+}
 }
