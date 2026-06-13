@@ -39,4 +39,26 @@ public class ExpenseService {
     public List<Expense> getAllExpenses() {
     return expenseRepository.findAll();
 }
+public Expense getExpenseById(Long id) {
+    return expenseRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Expense not found with id: " + id));
+}
+
+public String updateExpense(Long id, ExpenseRequest request) {
+
+    Expense expense = expenseRepository.findById(id)
+            .orElseThrow(() ->
+                    new RuntimeException(
+                            "Expense not found with id: " + id));
+
+    expense.setTitle(request.getTitle());
+    expense.setAmount(request.getAmount());
+    expense.setCategory(request.getCategory());
+    expense.setDescription(request.getDescription());
+    expense.setUserEmail(request.getUserEmail());
+
+    expenseRepository.save(expense);
+
+    return "Expense updated successfully";
+}
 }
